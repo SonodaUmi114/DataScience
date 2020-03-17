@@ -39,7 +39,7 @@ class sl_hour_cnt:
             self.commits = []
         except IndexError:
             print('2 or more arguments needed please!')
-            sys.exit(0)
+            sys.exit(-1)
 
         parser = ArgumentParser(description='get the commit count per sublevel pointwise or cumulative (c)')
         parser.add_argument('revision1', help='first reversion')
@@ -67,7 +67,7 @@ class sl_hour_cnt:
             self.rev_range = int(args.revision2)
         except ValueError:
             print('Invalid input!')
-            sys.exit(0)
+            sys.exit(-1)
 
         print("#sublevel commits %s stable fixes" % self.rev)
         print("lv hour bugs")  # tag for R data.frame
@@ -88,7 +88,7 @@ class sl_hour_cnt:
         except FoundException as e:
             print(e)
             sl_hour_cnt.get_picture(self)
-            sys.exit(2)
+            sys.exit(-1)
         # if we request something that does not exist -> 0
         cnt = re.findall('[0-9]*-[0-9]*-[0-9]*', str(raw_counts))
         return len(cnt)
@@ -121,7 +121,7 @@ class sl_hour_cnt:
                 raise FoundException
         except FoundException as e:
             print(e)
-            sys.exit(2)
+            sys.exit(-1)
         return (int(seconds) - base) // SecPerHour
 
     # get dates of all commits - unsorted
@@ -148,7 +148,6 @@ class sl_hour_cnt:
         sublevels = self.sublevels
         release_hours = self.release_hours
         commits = self.commits
-        v44 = 1452466892
         try:
             rev1 = self.rev
             # v = subprocess.Popen("git log -1 --pretty=format:\"%ct\" " + rev1, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, shell=True)
@@ -168,7 +167,7 @@ class sl_hour_cnt:
                 # if get back 0 then its an invalid revision number
                 if commit_cnt:
                     git_tag_date = subprocess.Popen(gittag_list, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-                    hours = self.get_tag_hours(git_tag_date, v44)
+                    hours = self.get_tag_hours(git_tag_date, self.v44)
                     release_hours.append(hours)
                     print("%s %d %d" % (sl, hours, commit_cnt))
 
@@ -176,7 +175,6 @@ class sl_hour_cnt:
                     continue
         except ValueError:
             print('No such a revision!')
-        return self.sublevels, self.release_hours, self.commits
 
 
 if __name__ == '__main__':
