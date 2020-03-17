@@ -20,10 +20,12 @@ import re, sys, subprocess, shlex
 from argparse import ArgumentParser
 from matplotlib import pyplot as plt
 
+
 class FoundException(BaseException):
     def __str__(self):
         pro = 'No more found!'
         return pro
+
 
 class sl_hour_cnt:
     def __init__(self):
@@ -42,12 +44,16 @@ class sl_hour_cnt:
         parser = ArgumentParser(description='get the commit count per sublevel pointwise or cumulative (c)')
         parser.add_argument('revision1', help='first reversion')
         parser.add_argument('revision2', type=str, help='last reversion')
-        parser.add_argument('-c','--cumulative',type=str, help='enable cumulative')
+        parser.add_argument('-c', '--cumulative', type=str, help='enable cumulative')
         args = parser.parse_args()
         if args.cumulative == 'c':
             self.cumulative = 1
-        else:
-            print("Dont know what you mean with {}" % format(args.cumulative))
+        elif args.cumulative:
+            # print("Dont know what you mean with {}" % format(args.cumulative))
+            print("Dont know what you mean with {}".format(args.cumulative))
+
+            # {value}".format(value=value)
+
             sys.exit(-1)
 
         # if len(sys.argv) == 4:
@@ -62,7 +68,7 @@ class sl_hour_cnt:
         except ValueError:
             print('Invalid input!')
             sys.exit(0)
-        
+
         print("#sublevel commits %s stable fixes" % self.rev)
         print("lv hour bugs")  # tag for R data.frame
         self.get_list()
@@ -76,7 +82,7 @@ class sl_hour_cnt:
             except subprocess.TimeoutExpired:
                 git_cmd.kill()
                 raw_counts = git_cmd.communicate()[0]
-                
+
             if len(raw_counts) == 0:
                 raise FoundException
         except FoundException as e:
@@ -88,7 +94,7 @@ class sl_hour_cnt:
         return len(cnt)
 
     def get_picture(self):
-        plt.scatter(self.sublevels,self.commits)
+        plt.scatter(self.sublevels, self.commits)
         plt.title("development of fixes over sublevel")
         plt.ylabel("stable fix commits")
         plt.xlabel("kernel sublevel stable release")
@@ -102,7 +108,6 @@ class sl_hour_cnt:
         plt.savefig("hours_v4.4.png")
         print('Success!')
 
-
     def get_tag_hours(self, git_cmd, base):
         SecPerHour = 3600
         try:
@@ -111,34 +116,34 @@ class sl_hour_cnt:
             except subprocess.TimeoutExpired:
                 git_cmd.kill()
                 seconds = git_cmd.communicate()[0]
-                
+
             if len(seconds) == 0:
                 raise FoundException
         except FoundException as e:
             print(e)
             sys.exit(2)
-        return (int(seconds)-base) // SecPerHour
+        return (int(seconds) - base) // SecPerHour
 
-# get dates of all commits - unsorted
-#     def rev_and_range(self):
-#         rev = sys.argv[1]
-#         cumulative = 0
-#         if len(sys.argv) == 4:
-#             if (sys.argv[3] == "c"):
-#                 cumulative = 1
-#             else:
-#                 print("Dont know what you mean with %s" % sys.argv[3])
-#                 sys.exit(-1)
-#         rev_range = int(sys.argv[2])
-#
-# setup and fill in the table
+    # get dates of all commits - unsorted
+    #     def rev_and_range(self):
+    #         rev = sys.argv[1]
+    #         cumulative = 0
+    #         if len(sys.argv) == 4:
+    #             if (sys.argv[3] == "c"):
+    #                 cumulative = 1
+    #             else:
+    #                 print("Dont know what you mean with %s" % sys.argv[3])
+    #                 sys.exit(-1)
+    #         rev_range = int(sys.argv[2])
+    #
+    # setup and fill in the table
 
-# base time of v4.1 and v4.4 as ref base
-# fix this to extract the time of the base commit
-# from git !
-#
-# hofrat@Debian:~/git/linux-stable$ git log -1 --pretty=format:"%ct" v4.4
-# 1452466892
+    # base time of v4.1 and v4.4 as ref base
+    # fix this to extract the time of the base commit
+    # from git !
+    #
+    # hofrat@Debian:~/git/linux-stable$ git log -1 --pretty=format:"%ct" v4.4
+    # 1452466892
     def get_list(self):
         sublevels = self.sublevels
         release_hours = self.release_hours
@@ -149,7 +154,7 @@ class sl_hour_cnt:
             # v = subprocess.Popen("git log -1 --pretty=format:\"%ct\" " + rev1, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, shell=True)
             # v = int(v.communicate()[0])
             for sl in range(1, self.rev_range + 1):
-                rev2 = self.rev + '.' + str(sl+1)
+                rev2 = self.rev + '.' + str(sl + 1)
                 gitcnt = "git rev-list --pretty=format:\"%ai\" " + rev1 + "..." + rev2
                 gittag = "git log -1 --pretty=format:\"%ct\" " + rev2
                 gitcnt_list = shlex.split(gitcnt)
@@ -171,10 +176,10 @@ class sl_hour_cnt:
                     continue
         except ValueError:
             print('No such a revision!')
-        return self.sublevels,self.release_hours,self.commits
-
+        return self.sublevels, self.release_hours, self.commits
 
 
 if __name__ == '__main__':
     a = sl_hour_cnt()
+
 
