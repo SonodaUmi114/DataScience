@@ -15,11 +15,17 @@
 # documentation: once you understand it - fix the docs !
 # transform it into a class rather than just functions !
 
+__copyright__ = 'T1,Lanzhou University,2020'
+__license__ = 'GPLV2 or later'
+__version__ = 0.2
+__author__ = ['Hanqiang Qiu','Yanfei Cao','Zheng Liu','Xiujie Song','Yuxuan Cao','Shan Gao','Zexin Zhang','Junwei Ding']
+__email__ = ['liuzheng2018@lzu.edu.cn','479845114@qq.com','songxj@lzu.edu.cn','shgao18@lzu.edu.cn']
+__status__ = 'done'
 
-import re, sys, subprocess, shlex, datetime
+import re, sys, shlex, datetime
 from argparse import ArgumentParser
 from matplotlib import pyplot as plt
-
+from subprocess import Popen, TimeoutExpired, PIPE, DEVNULL
 
 class FoundException(BaseException):
     def __str__(self):
@@ -89,7 +95,7 @@ class sl_hour_cnt:
         try:
             try:
                 raw_counts = git_cmd.communicate(timeout=10)[0]
-            except subprocess.TimeoutExpired:
+            except TimeoutExpired:
                 git_cmd.kill()
                 raw_counts = git_cmd.communicate()[0]
 
@@ -137,7 +143,7 @@ class sl_hour_cnt:
         try:
             try:
                 seconds = git_cmd.communicate(timeout=10)[0]
-            except subprocess.TimeoutExpired:
+            except TimeoutExpired:
                 git_cmd.kill()
                 seconds = git_cmd.communicate()[0]
 
@@ -181,8 +187,8 @@ class sl_hour_cnt:
         commits = self.commits
         try:
             rev1 = self.rev
-            v = subprocess.Popen("git log -1 --pretty=format:\"%ct\" " + rev1, stdout=subprocess.PIPE,
-                                 stderr=subprocess.DEVNULL, shell=True)
+            v = Popen("git log -1 --pretty=format:\"%ct\" " + rev1, stdout=PIPE,
+                                 stderr=DEVNULL, shell=True)
             v = int(v.communicate()[0])  # The timestamp for the initial version, like v44 = 1452466892.
             for sl in range(1, self.rev_range + 1):
                 rev2 = self.rev + '.' + str(sl + 1)
@@ -190,7 +196,7 @@ class sl_hour_cnt:
                 gittag = "git log -1 --pretty=format:\"%ct\" " + rev2
                 gitcnt_list = shlex.split(gitcnt)
                 gittag_list = shlex.split(gittag)
-                git_rev_list = subprocess.Popen(gitcnt_list, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                git_rev_list = Popen(gitcnt_list, stdout=PIPE, stderr=DEVNULL)
                 commit_cnt = self.get_commit_cnt(git_rev_list)
                 sublevels.append(sl)
                 commits.append(commit_cnt)
@@ -198,7 +204,7 @@ class sl_hour_cnt:
                     rev1 = rev2
                 # if get back 0 then its an invalid revision number
                 if commit_cnt:
-                    git_tag_date = subprocess.Popen(gittag_list, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                    git_tag_date = Popen(gittag_list, stdout=PIPE, stderr=DEVNULL)
                     hours = self.get_tag_hours(git_tag_date, v)
                     release_hours.append(hours)
                     print("%s %d %d" % (sl, hours, commit_cnt))
