@@ -79,7 +79,8 @@ class sl_hour_cnt:
             sys.exit(-1)
 
         print("#sublevel commits %s stable fixes" % self.rev)
-        print("lv hour bugs")  # tag for R data.frame
+        tplt = "{:<9}\t{:<9}\t{:<9}"
+        print(tplt.format('lv', 'hour', 'bugs'))  # tag for R data.frame
         self.get_list()
         self.get_picture()
 
@@ -207,7 +208,8 @@ class sl_hour_cnt:
                     git_tag_date = Popen(gittag_list, stdout=PIPE, stderr=DEVNULL)
                     hours = self.get_tag_hours(git_tag_date, v)
                     release_hours.append(hours)
-                    print("%s %d %d" % (sl, hours, commit_cnt))
+                    tplt = "{:<9}\t{:<9}\t{:<9}"
+                    print(tplt.format(sl, hours, commit_cnt))
 
                 else:
                     continue
