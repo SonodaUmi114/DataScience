@@ -29,31 +29,28 @@ class FoundException(BaseException):
 
 class sl_hour_cnt:
     def __init__(self):
-        try:
-            self.rev = sys.argv[1]
-            self.rev_range = sys.argv[2]
-            self.cumulative = 0
-            self.v44 = 1452466892
-            self.sublevels = []
-            self.release_hours = []
-            self.commits = []
-        except IndexError:
-            print('2 or more arguments needed please!')
-            sys.exit(-1)
-
         parser = ArgumentParser(description='get the commit count per sublevel pointwise or cumulative (c)')
-        parser.add_argument('revision1', help='first reversion')
-        parser.add_argument('revision2', type=str, help='last reversion')
+        parser.add_argument('revision1', help='first reversion, like v4.4')
+        parser.add_argument('revision2', type=str, help='last reversion, like 203')
         parser.add_argument('-c', '--cumulative', type=str, help='enable cumulative')
         args = parser.parse_args()
+        # try:
+        self.rev = args.revision1
+        self.rev_range = args.revision2
+        self.cumulative = 0
+        self.v44 = 1452466892
+        self.sublevels = []
+        self.release_hours = []
+        self.commits = []
+
+        # except IndexError:
+        #     print('2 or more arguments needed please!')
+        #     sys.exit(0)
         if args.cumulative == 'c':
             self.cumulative = 1
         elif args.cumulative:
             # print("Dont know what you mean with {}" % format(args.cumulative))
             print("Dont know what you mean with {}".format(args.cumulative))
-
-            # {value}".format(value=value)
-
             sys.exit(-1)
 
         # if len(sys.argv) == 4:
