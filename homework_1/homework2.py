@@ -23,6 +23,12 @@ from matplotlib import pyplot as plt
 
 class FoundException(BaseException):
     def __str__(self):
+        """
+        write an exception
+
+        :return: a string for tips
+        :rtype: str
+        """
         pro = 'No more found!'
         return pro
 
@@ -71,9 +77,15 @@ class sl_hour_cnt:
         self.get_list()
         self.get_picture()
 
+    def get_commit_cnt(self, git_cmd) -> int:
+        """
+        Get the number of stable fix commits
 
-    def get_commit_cnt(self, git_cmd):
-        cnt = 0
+        :param git_cmd: subprocess.Popen object
+        :return: The number of the commits time
+        :rtype: int
+        """
+        # cnt = 0
         try:
             try:
                 raw_counts = git_cmd.communicate(timeout=10)[0]
@@ -86,13 +98,18 @@ class sl_hour_cnt:
         except FoundException as e:
             print(e)
             sl_hour_cnt.get_picture(self)
-            
+
             sys.exit(-1)
         # if we request something that does not exist -> 0
         cnt = re.findall('[0-9]*-[0-9]*-[0-9]*', str(raw_counts))
         return len(cnt)
 
     def get_picture(self):
+        """
+        visualize the result by scatter plot
+
+        :return: The scatter plot of the results
+        """
         plt.scatter(self.sublevels, self.commits)
         plt.title("development of fixes over sublevel")
         plt.ylabel("stable fix commits")
@@ -107,7 +124,15 @@ class sl_hour_cnt:
         plt.savefig("hours_%s.png" % self.rev)
         print("Successfully saved picture as hours_%s.png" % self.rev)
 
-    def get_tag_hours(self, git_cmd, base):
+    def get_tag_hours(self, git_cmd, base: int) -> int:
+        """
+        Get the hour spent during the development of fixes
+
+        :param git_cmd: subprocess.Popen object
+        :param base: 1452466892
+        :return: the hour spent
+        :rtype: int
+        """
         SecPerHour = 3600
         try:
             try:
@@ -145,13 +170,20 @@ class sl_hour_cnt:
     # hofrat@Debian:~/git/linux-stable$ git log -1 --pretty=format:"%ct" v4.4
     # 1452466892
     def get_list(self):
+        """
+        Get the list of sublevel, hours spent and stable fix commits
+
+        :return: a string of the list of sublevel, hours, and bugs
+        :rtype: str
+        """
         sublevels = self.sublevels
         release_hours = self.release_hours
         commits = self.commits
         try:
             rev1 = self.rev
-            v = subprocess.Popen("git log -1 --pretty=format:\"%ct\" " + rev1, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, shell=True)
-            v = int(v.communicate()[0]) # The timestamp for the initial version, like v44 = 1452466892.
+            v = subprocess.Popen("git log -1 --pretty=format:\"%ct\" " + rev1, stdout=subprocess.PIPE,
+                                 stderr=subprocess.DEVNULL, shell=True)
+            v = int(v.communicate()[0])  # The timestamp for the initial version, like v44 = 1452466892.
             for sl in range(1, self.rev_range + 1):
                 rev2 = self.rev + '.' + str(sl + 1)
                 gitcnt = "git rev-list --pretty=format:\"%ai\" " + rev1 + "..." + rev2
@@ -176,14 +208,21 @@ class sl_hour_cnt:
         except ValueError:
             err = 'Invalid revision!'
             print(err)
-            sl_hour_cnt.log_err(self,err)
+            sl_hour_cnt.log_err(self, err)
 
-    def log_err(self,err):
+    def log_err(self, err):
+        """
+        record the error to a log
+
+        :param err: 'Invalid revision!'
+        :return: a log of the error
+        """
         now = datetime.datetime.now()
         current_time = now.strftime("%Y-%m-%d %H:%M:%S")
         log = 'log.txt'  # define the name of file
         with open(log, 'a', encoding="utf-8") as f:
             f.write(current_time + '   ' + err + '\n')
+
 
 if __name__ == '__main__':
     a = sl_hour_cnt()
