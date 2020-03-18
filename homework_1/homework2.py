@@ -98,14 +98,14 @@ class sl_hour_cnt:
         plt.title("development of fixes over sublevel")
         plt.ylabel("stable fix commits")
         plt.xlabel("kernel sublevel stable release")
-        plt.savefig("sublevel_v4.4.png")
+        plt.savefig("sublevel_%s.png" % self.rev)
         plt.clf()
         plt.scatter(self.release_hours, self.commits)
-        print(self.release_hours, self.commits)
+        # print(self.release_hours, self.commits)
         plt.title("development of fixes over days")
         plt.ylabel("stable fix commits")
         plt.xlabel("hours spent")
-        plt.savefig("hours_v4.4.png")
+        plt.savefig("hours_%s.png" % self.rev)
         print('Success!')
 
     def get_tag_hours(self, git_cmd, base):
@@ -179,5 +179,3 @@ class sl_hour_cnt:
 
 if __name__ == '__main__':
     a = sl_hour_cnt()
-
-
