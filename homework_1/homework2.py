@@ -14,8 +14,10 @@ Zhang Zexing  320180940590  zhangzexin18@lzu.edu.cn
 """
 
 """
-Basic function of file: print the number of commits and the time in the Linux kernel of v4.4 of 203 sublevels (from v4.4.1 to v4.4.203) , and visualize the result by scatter plot.
-Parameter: v4.4(the Linux kernel), 203(sublevel) .
+Basic function of file: print the number of commits per sublevel pointwise or cumulative (-c c) and the time in the Linux kernel of sublevels of a version, and visualize the result by scatter plot.
+e.g. $ python homework.py v4.4 203 (-c c)
+You will get the number of commits pointwise (or cumulative) and time per sublevel(from v4.4.1 to v4.4.203) 
+Parameter: v4.4(the Linux kernel), 203(sublevel), -c c(enable cumulative)
 Output: sublevel, hour, bug and their simple scatter plot.
 """
 
@@ -50,7 +52,6 @@ class sl_hour_cnt:
         parser.add_argument('rev_range', type=str, help='last reversion, like 203')
         parser.add_argument('-c', '--cumulative', type=str, help='enable cumulative')
         args = parser.parse_args()
-        # try:
         self.rev = args.revision1
         self.cumulative = 0
         self.sublevels = []
@@ -60,19 +61,10 @@ class sl_hour_cnt:
         if args.cumulative == 'c':
             self.cumulative = 1
         elif args.cumulative:
-            # print("Dont know what you mean with {}" % format(args.cumulative))
             err = "Dont know what you mean with {}".format(args.cumulative)
             print(err)
             self.log_err(err)
-            # {value}".format(value=value)
             sys.exit(-1)
-
-        # if len(sys.argv) == 4:
-        #     if (sys.argv[3] == "c"):
-        #         self.cumulative = 1
-        #     else:
-        #         print("Dont know what you mean with {}" % format(sys.argv[3]))
-        #         sys.exit(-1)
 
         try:
             self.rev_range = int(args.rev_range)
