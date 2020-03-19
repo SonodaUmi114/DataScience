@@ -5,7 +5,7 @@ __copyright__ = 'T1,Lanzhou University,2020'
 __license__ = 'GPLV2 or later'
 __version__ = 0.2
 __author__ = ['Hanqiang Qiu','Yanfei Cao','Zheng Liu','Xiujie Song','Yuxuan Cao','Shan Gao','Zexin Zhang','Junwei Ding']
-__email__ = ['liuzheng2018@lzu.edu.cn','479845114@qq.com','songxj@lzu.edu.cn','shgao18@lzu.edu.cn','dingjw18@lzu.edu.cn']
+__email__ = ['liuzheng2018@lzu.edu.cn','479845114@qq.com','songxj@lzu.edu.cn','shgao18@lzu.edu.cn','dingjw18@lzu.edu.cn','caoyf18@lzu.edu.cn']
 __status__ = 'done'
 
 import re, sys, shlex, datetime
