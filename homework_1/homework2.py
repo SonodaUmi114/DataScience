@@ -19,6 +19,7 @@ e.g. $ python homework.py v4.4 203 (-c c)
 You will get the number of commits pointwise (or cumulative) and time per sublevel(from v4.4.1 to v4.4.203) 
 Parameter: v4.4(the Linux kernel), 203(sublevel), -c c(enable cumulative)
 Output: sublevel, hour, bug and their simple scatter plot.
+help: $ python homework.py -h, you will get information about arguments.
 """
 
 __copyright__ = 'T1,Lanzhou University,2020'
