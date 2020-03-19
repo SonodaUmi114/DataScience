@@ -1,5 +1,23 @@
 # !/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+Group1 members information:
+Name, ID, E-mail
+Cao Yanfei    320180939561  caoyf18@lzu.edu.cn
+Cao Yuxuan    320180939571  caoyx2018@lzu.edu.cn
+Ding Junwei   320180939671  dingjw18@lzu.edu.cn
+Gao Shan      320180939740  shgao18@lzu.edu.cn
+Liu Zheng     320180940101  liuzheng2018@lzu.edu.cn
+Qiu Hanqiang  320180940181  479845114@qq.com
+Song Xiujie   320180940211  songxj2018@lzu.edu.cn
+Zhang Zexing  320180940590  zhangzexin18@lzu.edu.cn
+"""
+
+"""
+Basic function of file: print the number of commits and the time in the Linux kernel of v4.4 of 203 sublevels (from v4.4.1 to v4.4.203) , and visualize the result by scatter plot.
+Parameter: v4.4(the Linux kernel), 203(sublevel) .
+Output: sublevel, hour, bug and their simple scatter plot.
+"""
 
 __copyright__ = 'T1,Lanzhou University,2020'
 __license__ = 'GPLV2 or later'
