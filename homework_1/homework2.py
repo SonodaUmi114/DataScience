@@ -77,6 +77,8 @@ class sl_hour_cnt:
         :param git_cmd: subprocess.Popen object
         :return: The number of the commits time
         :rtype: int
+        >>> a.get_commit_cnt(Popen(['git', 'rev-list', '--pretty=format:%ai', 'v4.4...v4.4.2'], stdout=PIPE, stderr=DEVNULL))
+        189
         """
         # cnt = 0
         try:
@@ -108,6 +110,7 @@ class sl_hour_cnt:
         plt.ylabel("stable fix commits")
         plt.xlabel("kernel sublevel stable release")
         plt.savefig("sublevel_%s.png" % self.rev)
+        print("Successfully saved picture as sublevel_%s.png" % self.rev)
         plt.clf()
         plt.scatter(self.release_hours, self.commits)
         # print(self.release_hours, self.commits)
@@ -125,6 +128,8 @@ class sl_hour_cnt:
         :param base: 1452466892
         :return: the hour spent
         :rtype: int
+        >>> a.get_tag_hours(Popen(['git', 'log', '-1', '--pretty=format:%ct', 'v4.4.2'], stdout=PIPE, stderr=DEVNULL),1452466892)
+        909
         """
         SecPerHour = 3600
         try:
@@ -201,3 +206,5 @@ class sl_hour_cnt:
 
 if __name__ == '__main__':
     a = sl_hour_cnt()
+    import doctest
+    doctest.testmod()
