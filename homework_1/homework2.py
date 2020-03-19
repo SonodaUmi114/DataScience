@@ -1,25 +1,11 @@
 # !/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# get the commit count per sublevel pointwise or cumulative (c)
-# arguments is the tag as displayed by git tag and the number
-# of sublevels to be counted. If count is out of range for a
-# specific sublevel it will terminate the loop
-#
-# no proper header in this file
-# no legal/copyright ...OMG !
-#
-# things to cleanup:
-# restructure the code - use of functions
-# error handling ...where is the try..except ?
-# argument handling: you can do better right ?
-# documentation: once you understand it - fix the docs !
-# transform it into a class rather than just functions !
 
 __copyright__ = 'T1,Lanzhou University,2020'
 __license__ = 'GPLV2 or later'
 __version__ = 0.2
 __author__ = ['Hanqiang Qiu','Yanfei Cao','Zheng Liu','Xiujie Song','Yuxuan Cao','Shan Gao','Zexin Zhang','Junwei Ding']
-__email__ = ['liuzheng2018@lzu.edu.cn','479845114@qq.com','songxj@lzu.edu.cn','shgao18@lzu.edu.cn']
+__email__ = ['liuzheng2018@lzu.edu.cn','479845114@qq.com','songxj@lzu.edu.cn','shgao18@lzu.edu.cn','dingjw18@lzu.edu.cn','caoyf18@lzu.edu.cn']
 __status__ = 'done'
 
 import re, sys, shlex, datetime
@@ -156,26 +142,7 @@ class sl_hour_cnt:
             sys.exit(-1)
         return (int(seconds) - base) // SecPerHour
 
-    # get dates of all commits - unsorted
-    #     def rev_and_range(self):
-    #         rev = sys.argv[1]
-    #         cumulative = 0
-    #         if len(sys.argv) == 4:
-    #             if (sys.argv[3] == "c"):
-    #                 cumulative = 1
-    #             else:
-    #                 print("Dont know what you mean with %s" % sys.argv[3])
-    #                 sys.exit(-1)
-    #         rev_range = int(sys.argv[2])
-    #
-    # setup and fill in the table
 
-    # base time of v4.1 and v4.4 as ref base
-    # fix this to extract the time of the base commit
-    # from git !
-    #
-    # hofrat@Debian:~/git/linux-stable$ git log -1 --pretty=format:"%ct" v4.4
-    # 1452466892
     def get_list(self):
         """
         Get the list of sublevel, hours spent and stable fix commits
