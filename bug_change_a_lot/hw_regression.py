@@ -4,12 +4,12 @@ import pandas as pd
 
 def mul_regression():
     # 1. obtain the data
-    fix = pd.read_csv('fix2.csv',
+    fix = pd.read_csv('fixes.csv',
                       header=None, names=['added', 'removed', 'file modified'])
     # fix = fix[['added','removed']]
     fix.insert(3, 'bug_commit', 0)
 
-    bug = pd.read_csv('bug2.csv',
+    bug = pd.read_csv('bugs.csv',
                       header=None, names=['added', 'removed', 'file modified'])
     bug.insert(3, 'bug_commit', 1)
     fix_bug = pd.concat([bug, fix], ignore_index=True)
@@ -32,12 +32,12 @@ def mul_regression():
 
 def sin_regression():
     # 1. obtain the data
-    fix = pd.read_csv('fix2.csv',
+    fix = pd.read_csv('fixes.csv',
                       header=None, names=['added', 'removed', 'file modified'])
     # fix = fix[['added','removed']]
     fix.insert(3, 'bug_commit', 0)
 
-    bug = pd.read_csv('bug2.csv',
+    bug = pd.read_csv('bugs.csv',
                       header=None, names=['added', 'removed', 'file modified'])
     bug.insert(3, 'bug_commit', 1)
     fix_bug = pd.concat([bug, fix], ignore_index=True)
