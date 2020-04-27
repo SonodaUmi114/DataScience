@@ -1,0 +1,8 @@
+Our target data to be collect is 
+1. 50 randomly selected bugs
+2. 50 fixes of these bugs
+3. 50 random commits
+4. Extract basic meta-data
+
+
+We choose to use linux-stable as our target and we choose the version 'v4.3'. For commits with 'Fixes' tags, they could be bugs and their fixes. So we have to grep the 'Fixes' tags to collect the data of bugs and fixes. We will record the id of commits and randomly selected 50 of them. In this way, we get the random data collection of bugs and their fixes. Then we randomly pick 50 commits from git log. The next step is to extract basic meta-data. We will use git diff to get the information about how many lines are removed and added and how many files are influenced.
