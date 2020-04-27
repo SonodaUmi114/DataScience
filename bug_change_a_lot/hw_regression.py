@@ -4,12 +4,12 @@ import pandas as pd
 
 def mul_regression():
     # 1. obtain the data
-    fix = pd.read_csv('fix2.csv',
+    fix = pd.read_csv('fixes.csv',
                       header=None, names=['added', 'removed', 'file modified'])
-    # fix = fix[['added','removed']]
+
     fix.insert(3, 'bug_commit', 0)
 
-    bug = pd.read_csv('bug2.csv',
+    bug = pd.read_csv('bugs.csv',
                       header=None, names=['added', 'removed', 'file modified'])
     bug.insert(3, 'bug_commit', 1)
     fix_bug = pd.concat([bug, fix], ignore_index=True)
@@ -26,18 +26,19 @@ def mul_regression():
     rd_sample = pd.read_csv('random_commits.csv')
     rd_sample.columns = ['added', 'removed', 'file modified']
     pre_bug = estimator.predict(x)
-    all_data = pd.concat([fix_bug, rd_sample])
-    print(estimator.score(x, y))
+    all_data = pd.concat([fix_bug, rd_sample],sort=False)
+    mul_r2 = estimator.score(x, y)
+    print('r^2 of multiple linear regression is:\n {}'.format(mul_r2))
 
 
 def sin_regression():
     # 1. obtain the data
-    fix = pd.read_csv('fix2.csv',
+    fix = pd.read_csv('fixes.csv',
                       header=None, names=['added', 'removed', 'file modified'])
     # fix = fix[['added','removed']]
     fix.insert(3, 'bug_commit', 0)
 
-    bug = pd.read_csv('bug2.csv',
+    bug = pd.read_csv('bugs.csv',
                       header=None, names=['added', 'removed', 'file modified'])
     bug.insert(3, 'bug_commit', 1)
     fix_bug = pd.concat([bug, fix], ignore_index=True)
@@ -52,7 +53,8 @@ def sin_regression():
     model = estimator.fit(x, y)
 
     # 3. test
-    print(estimator.score(x, y))
+    sin_r2 = estimator.score(x, y)
+    print('r^2 of single linear regression is:\n {}'.format(sin_r2))
 
 
 mul_regression()
