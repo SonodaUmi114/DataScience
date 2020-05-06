@@ -14,7 +14,7 @@ Zhang Zexin   320180940590  zhangzexin18@lzu.edu.cn
 """
 
 """
-
+Get 50 randomly selected bugs, 50 fixes, and 50 random commits from Linux kernel. And save in csv file
 """
 
 __copyright__ = 'T1,Lanzhou University,2020'

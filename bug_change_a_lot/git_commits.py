@@ -14,7 +14,7 @@ Zhang Zexin   320180940590  zhangzexin18@lzu.edu.cn
 """
 
 """
-
+Basic function of file: Obtain the id of commit, bugs and fixes from the Linux kernel and save it in a csv file.
 """
 
 __copyright__ = 'T1,Lanzhou University,2020'

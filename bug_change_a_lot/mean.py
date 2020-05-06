@@ -14,8 +14,8 @@ Zhang Zexin   320180940590  zhangzexin18@lzu.edu.cn
 """
 
 """
-Basic function of the file: calculating mean differences
-    2020/4/20
+Basic function of the file: calculating mean differences of 'added' and 'removed'
+    
 """
 
 __copyright__ = 'T1,Lanzhou University,2020'

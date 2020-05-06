@@ -14,7 +14,8 @@ Zhang Zexin   320180940590  zhangzexin18@lzu.edu.cn
 """
 
 """
-
+Basic function of file: construct multiple linear regression and single linear regression. Evaluate the prediction quality of the model
+You can get a number that determines the prediction of the coefficient R ^ 2.
 """
 
 __copyright__ = 'T1,Lanzhou University,2020'
