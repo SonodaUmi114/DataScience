@@ -49,9 +49,9 @@ class Test():
         row = np.array(reader.iloc[index])
 
         fix_id = row[0]
-        self.get_data(fix_id, self.repo, 'fix.csv', 1)
+        self.get_data(fix_id, self.repo, 'fixes.csv', 1)
         bug_id = row[1]
-        self.get_data(bug_id, self.repo, 'bug.csv', 1)
+        self.get_data(bug_id, self.repo, 'bugs.csv', 1)
 
     def read_csv2(self, path, index):
         reader = pd.read_csv(path, header=None, )
