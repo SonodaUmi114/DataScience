@@ -16,7 +16,6 @@ Zhang Zexin   320180940590  zhangzexin18@lzu.edu.cn
 """
 Basic function of file: print the number of commits per sublevel pointwise or cumulative (-c c) and the time in the Linux kernel of sublevels of a version, and visualize the result by scatter plot.
 e.g. $ python homework.py v4.4 203 (-c c)
-Report missing values.
 You will get the number of commits pointwise (or cumulative) and time per sublevel(from v4.4.1 to v4.4.203) 
 Parameter: v4.4(the Linux kernel), 203(sublevel), -c c(enable cumulative)
 Output: sublevel, hour, commits, bug and their simple scatter plot.
@@ -63,7 +62,7 @@ class sl_hour_cnt:
         self.commits = []
         self.commit_cnt_list=[]
         self.lv2=[]
-        self.original_file='data_v4.4.csv'
+        self.original_file = str(self.rev) + '.csv'
 
 
         if args.cumulative == 'c':
@@ -114,8 +113,12 @@ class sl_hour_cnt:
             if len(raw_counts) == 0:
                 raise FoundException
         except FoundException as e:
-            print(e)
             sl_hour_cnt.get_picture(self)
+            sl_hour_cnt.data_frame(self)
+            print(e)
+            sl_hour_cnt.pd_data_handling(self)
+            self.lost_report()
+
 
             sys.exit(-1)
         # if we request something that does not exist -> 0
@@ -215,6 +218,7 @@ class sl_hour_cnt:
 
                 else:
                     continue
+
             # dt = pd.DataFrame({
             #     'sl': np.array(sl),
             #     'hours': np.array(hours),
@@ -237,6 +241,8 @@ class sl_hour_cnt:
             print(err)
             sl_hour_cnt.log_err(self, err)
 
+        print(self.rev)
+        
 
     def data_frame(self):
 
@@ -252,36 +258,19 @@ class sl_hour_cnt:
         #write in a csv file
         df.to_csv(self.original_file)
 
-
-
-
-    def log_err(self, err):
-        """
-        record the error to a log
-
-        :param err: 'Invalid revision!'
-        :return: a log of the error
-        """
-        now = datetime.datetime.now()
-        current_time = now.strftime("%Y-%m-%d %H:%M:%S")
-        log = 'log.txt'  # define the name of file
-        with open(log, 'a', encoding="utf-8") as f:
-            f.write(current_time + '   ' + err + '\n')
-
     def pd_data_handling(self):
         df = pd.read_csv(self.original_file, usecols = [1,2,3],index_col=1)
         nan_count = df.isnull().sum().sum()
         nan_report = 'There are {} null value(s) in dataset!'.format(nan_count)
         print(nan_report)
 
-        data_file = "clean_data_v4.4"
+        data_file = "clean_data_{}".format(self.rev)
         csv_data = data_file + ".csv"
         df.to_csv(csv_data)
 
-
     def lost_report(self):
 
-        data = pd.read_csv('data_v4.4.csv')
+        data = pd.read_csv('{}.csv'.format(self.rev))
         binaryframe = data.isnull().values == True
         # print(binaryframe)
 
@@ -315,6 +304,18 @@ class sl_hour_cnt:
         f.writelines(outlist)
         f.close()
 
+    def log_err(self, err):
+        """
+        record the error to a log
+
+        :param err: 'Invalid revision!'
+        :return: a log of the error
+        """
+        now = datetime.datetime.now()
+        current_time = now.strftime("%Y-%m-%d %H:%M:%S")
+        log = 'log.txt'  # define the name of file
+        with open(log, 'a', encoding="utf-8") as f:
+            f.write(current_time + '   ' + err + '\n')
 
 
 if __name__ == '__main__':
