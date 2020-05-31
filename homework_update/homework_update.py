@@ -90,6 +90,7 @@ class sl_hour_cnt:
         self.get_picture()
         self.data_frame()
         self.pd_data_handling()
+        self.lost_report()
 
 
     def get_commit_cnt(self, git_cmd) -> int:
@@ -251,16 +252,7 @@ class sl_hour_cnt:
         #write in a csv file
         df.to_csv(self.original_file)
 
-    def pd_data_handling(self):
-        df = pd.read_csv(self.original_file, index_col='lv')
-        nan_count = df.isnull().sum().sum()
-        nan_report = 'There are {} null value(s) in dataset!'.format(nan_count)
-        print(nan_report)
 
-        data_file = "clean_data_v4.4"
-        df = pd.read_csv(self.original_file, comment="#", header=0, sep=" ", index_col="lv")
-        csv_data = data_file + ".csv"
-        df.to_csv(csv_data)
 
 
     def log_err(self, err):
@@ -276,17 +268,16 @@ class sl_hour_cnt:
         with open(log, 'a', encoding="utf-8") as f:
             f.write(current_time + '   ' + err + '\n')
 
-
     def pd_data_handling(self):
-        df = pd.read_csv(self, index_col='lv')
+        df = pd.read_csv(self.original_file, usecols = [1,2,3],index_col=1)
         nan_count = df.isnull().sum().sum()
         nan_report = 'There are {} null value(s) in dataset!'.format(nan_count)
         print(nan_report)
 
         data_file = "clean_data_v4.4"
-        df = pd.read_csv(data_file, comment="#", header=0, sep=" ", index_col="lv")
         csv_data = data_file + ".csv"
         df.to_csv(csv_data)
+
 
     def lost_report(self):
 
