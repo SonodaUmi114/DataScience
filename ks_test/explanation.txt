@@ -5,18 +5,18 @@ In the range of 50 to 150 hours( two to six days ), the largest number of bugs w
 Test-metric:
 
 We selected two test metrics:
-1) Propotion of the number of bugs fixed between 50 and 150 hours.
+1) Proportion of the number of bugs fixed between 50 and 150 hours.
 2) KS-test 
 
 Implementation and evaluation:
 
-We counted the propotion of bugs fixed between 50 and 150, and find that the propotion of v4.4 v4.9 v4.14 and v4.19 is respectively 
+We counted the proportion of bugs fixed between 50 and 150, and found that the proportion of v4.4 v4.9 v4.14 and v4.19 is respectively 
 0.57, 0.64, 0.68 and 0.69, which means more than half bugs were fixed in this range.
 
-Then we use KS-test to check if they have same distribution in the range of 0 to 200 hours. The p-values are 0.87, 0.20, 0.065, 0.46, 0.12, 0.88, and they are all larger than 0.05, so we cannot reject original hypothesis, which means they have same distribution.
+Then we use KS-test to check if they have same distribution in the range of 0 to 200 hours. The p-values are 0.87, 0.20, 0.065, 0.46, 0.12, 0.88, and they are all larger than 0.05, so we cannot reject null hypothesis, which means they have same distribution.
 
 Conclusion:
-1) It is a relevant/ reasonable metirc. Because v4.4 has peaks between 50 and 150 hours, if others has same distribution, they also have peaks in this range. More than half bugs were fixed in this range, which also shows data is concentrated in this range.
+1) It is a relevant/ reasonable metric. Because v4.4 has peaks between 50 and 150 hours, if others has same distribution, they also have peaks in this range. More than half bugs were fixed in this range, which also shows data is concentrated in this range.
 
 2) It is a robust indicator. It is not only visible in v4.4. After comparing, we can find that v4.9, v4.19 and v4.14 have same character.
 
