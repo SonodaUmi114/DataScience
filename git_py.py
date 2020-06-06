@@ -86,7 +86,7 @@ def rearrange(filePath='result.csv'):
     csv_writer = csv.writer(f)
     csv_writer.writerows(fixed)
 
-gitFileDynamics("kernel/sched/core.c", "v4.4..v4.5", "E:/Python/linux-kernal/linux")
+gitFileDynamics("kernel/sched/core.c", "v4.4..v4.5", "f:/linux_stable/linux-stable")
 
 # with open('result.csv', 'r') as f:
 #     reader = csv.reader(f)
