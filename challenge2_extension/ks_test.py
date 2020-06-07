@@ -28,56 +28,74 @@ __status__ = 'done'
 import pandas as pd
 from scipy.stats import ks_2samp
 
-def get_diff(filename):
-    # get diff data
-    df = pd.read_csv(filename, comment='#', header=0, sep=',', index_col='lv')
-    a = list(df['hour'].values)
-    diff=[a[0]] + [a[i + 1] - a[i] for i in range(len(a) - 1)]
-    return diff
 
-def ks_diff():
-    v4_200 = [i for i in get_diff('4.4.csv') if i < 200]
-    v9_200 = [i for i in get_diff('4.9.csv') if i < 200]
-    v14_200 = [i for i in get_diff('4.14.csv') if i < 200]
-    v19_200 = [i for i in get_diff('4.19.csv') if i < 200]
+class Data:
+    def __init__(self, filename):
+        self.filename=filename
 
-    st44_49,p44_49 = ks_2samp(v4_200,v9_200)
-    st44_414,p44_414 = ks_2samp(v4_200,v14_200)
-    st44_419,p44_419 = ks_2samp(v4_200,v19_200)
-    st49_414,p49_414 = ks_2samp(v9_200,v14_200)
-    st49_419,p49_419 = ks_2samp(v9_200,v19_200)
-    st414_419,p414_419 = ks_2samp(v14_200,v19_200)
+    def get_diff(self):
+        # get diff data
+        df = pd.read_csv(self.filename, comment='#', header=0, sep=',', index_col='lv')
+        a = list(df['hour'].values)
+        diff=[a[0]] + [a[i + 1] - a[i] for i in range(len(a) - 1)]
+        return diff
 
-    st_list = [st44_49,st44_414,st44_419,st49_414,st49_419,st414_419]
-    plist = [p44_49,p44_414,p44_419,p49_414,p49_419,p414_419]
-    order = ['v4.4 & v4.9','v4.4 & v4.14','v4.4 & v4.19','v4.9 & v4.14','v4.9 & v4.19','v4.14 & v4.19']
-    for i in range(len(plist)):
-        print('p-value of comparision between', order[i],":",plist[i])
+    def get_num_in_range(self, min, max):
+        ldiff = self.get_diff()
+        # total number
+        tnum = len(ldiff)
+        diff_in_range = [i for i in ldiff if i <= int(max) and i >= int(min)]
+        # number in the range [50,150]
+        range_num = len(diff_in_range)
+        return tnum,range_num
 
-def get_num_in_range(filename,min,max):
-    ldiff = get_diff(filename)
-    tnum = len(ldiff)
-    diff_in_range = [i for i in ldiff if i <= int(max) and i >= int(min)]
-    range_num = len(diff_in_range)
-    return tnum,range_num
+    def get_diff_percent(self):
+        v_num,v_rnum = self.get_num_in_range(50,150)
+        per = v_rnum/v_num
+        return per
 
-def get_diff_percent():
-    v44_num,v44_rnum = get_num_in_range('4.4.csv',50,150)
-    v49_num,v49_rnum = get_num_in_range('4.9.csv',50,150)
-    v414_num,v414_rnum = get_num_in_range('4.14.csv',50,150)
-    v419_num,v419_rnum = get_num_in_range('4.19.csv',50,150)
 
-    per_44 = v44_rnum/v44_num
-    per_49 = v49_rnum/v49_num
-    per_414 = v414_rnum/v414_num
-    per_419 = v419_rnum/v419_num
+class Metric:
 
-    per_list = [per_44,per_49,per_414,per_419]
-    ver_list = ['v4.4','v4.9','v4.14','v4.19']
+    def __init__(self, data1, data2):
+        self.v_data1=data1
+        self.v_data2=data2
+
+    def ks_diff(self):
+        """Using ks-test to compare distribution, return p-values."""
+        v_200_1 = [i for i in self.v_data1.get_diff() if i < 200]
+        v_200_2 = [i for i in self.v_data2.get_diff() if i < 200]
+
+        st,p = ks_2samp(v_200_1,v_200_2)
+        return p
+
+
+if __name__ == '__main__':
+    v44=Data('4.4.csv')
+    v49=Data('4.9.csv')
+    v414=Data('4.14.csv')
+    v419=Data('4.19.csv')
+
+    per_list = [v44.get_diff_percent(), v49.get_diff_percent(), v414.get_diff_percent(), v419.get_diff_percent()]
+    ver_list = ['v4.4', 'v4.9', 'v4.14', 'v4.19']
     print('Ratio of diff data between 50-150:')
     for i in range(len(per_list)):
         print('{}:'.format(ver_list[i]), per_list[i])
 
-ks_diff()
-get_diff_percent()
+    v44_49=Metric(v44, v49)
+    v44_414=Metric(v44, v414)
+    v44_419=Metric(v44, v419)
+    v49_414=Metric(v49, v414)
+    v49_419=Metric(v49, v419)
+    v414_419=Metric(v414, v419)
 
+    p44_49=v44_49.ks_diff()
+    p44_414=v44_414.ks_diff()
+    p44_419=v44_419.ks_diff()
+    p49_414=v49_414.ks_diff()
+    p49_419=v49_419.ks_diff()
+    p414_419=v414_419.ks_diff()
+    plist = [p44_49,p44_414,p44_419,p49_414,p49_419,p414_419]
+    order = ['v4.4 & v4.9', 'v4.4 & v4.14', 'v4.4 & v4.19', 'v4.9 & v4.14', 'v4.9 & v4.19', 'v4.14 & v4.19']
+    for i in range(len(plist)):
+        print('p-value of comparision between', order[i], ":", plist[i])
