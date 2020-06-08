@@ -13,15 +13,20 @@ Zhang Zexin   320180940590  zhangzexin18@lzu.edu.cn
 """
 
 """
-Use ks-testb to verify if diff hours of different versions are from the same distribution.
-And get the proportion of diff hours in the range of 50-150. 
+data3: group homework
+Question: does bug-survivial time change with sublevels?
+Hypothesis: 
+We collected the bug survival time in sublevels of v4.9
+For each sublevel, we calculted the average survival time of bugs.
+Then, we draw the line chart; x-axis is sublevels(from v4.4.1 to v4.4.215), y-axis is the average bug-survival time.
+Last we calculated the correlation coefficient to check the relationship.
 """
 
 __copyright__ = 'T1,Lanzhou University,2020'
 __license__ = 'GPLV2 or later'
 __version__ = 0.2
 __author__ = ['Hanqiang Qiu','Yanfei Cao','Zheng Liu','Xiujie Song','Yuxuan Cao','Shan Gao','Zexin Zhang','Junwei Ding']
-__email__ = ['479845114@qq.com','caoyf18@lzu.edu.cn','liuzheng2018@lzu.edu.cn','songxj@lzu.edu.cn','caoyx2018@lzu.edu.cn','shgao18@lzu.edu.cn','zhangzexin18@lzu.edu.cn','dingjw18@lzu.edu.cn']
+__email__ = ['479845114@qq.com','caoyf18@lzu.edu.cn','liuzheng2018@lzu.edu.cn','songxj2018@lzu.edu.cn','caoyx2018@lzu.edu.cn','shgao18@lzu.edu.cn','zhangzexin18@lzu.edu.cn','dingjw18@lzu.edu.cn']
 __status__ = 'done'
 
 
@@ -30,6 +35,7 @@ import re
 import unicodedata
 from subprocess import Popen, PIPE
 import matplotlib.pyplot as plt
+
 
 class Data:
     def __init__(self):
@@ -61,7 +67,7 @@ class Data:
                 # shortened to 7 == shortest fixes tag I found
                 # print(cur_commit[7:19], ",", line.strip()[7:16], sep="")
                 cmt_list.append(cur_commit[7:19])
-                fix_list.append(line.strip()[7:16])
+                fix_list.append(line.strip()[7:30].split(' ')[0])
         # print("total found fixes:", nr_fixes)
         return cmt_list,fix_list
 
@@ -93,8 +99,6 @@ class Data:
 
         return cmt_time, fix_time
 
-
-
     def get_diff(self, cmt_time, fix_time):
         """
         Getting time difference between commits and fixes
@@ -107,7 +111,6 @@ class Data:
         ldiff = [(cmt_time[i] - fix_time[i]) // sec_per_hour for i in range(len(cmt_time))]
         # print(ldiff)
         return ldiff
-
 
 
 class Plot:
@@ -129,11 +132,24 @@ class Plot:
         :param mlist: list of means of time differences
         :return: showing plot
         """
-        plt.plot(['v4.9.{}'.format(i) for i in range(1,216)],mlist)
+        plt.plot(['v4.9.{}'.format(i) for i in range(1,226)],mlist)
         plt.xlabel('sublevels')
         plt.ylabel('average bug-survival time')
         plt.title('bug-survival time changed over sublevels')
         plt.show()
+
+    def correlation(self,mlist):
+        """
+        Calculate the correlation coefficient of data
+        :param mlist:list of means of time differences
+        :return:correlation coefficient of data
+        """
+        x=[i for i in range(1,226)]
+        y=mlist
+        xy = np.array([x, y])
+        np.cov(xy)
+        corre = np.corrcoef(xy)
+        print(corre)
 
 if __name__ == '__main__':
     commit = re.compile('^commit [0-9a-z]{40}$', re.IGNORECASE)
@@ -142,10 +158,13 @@ if __name__ == '__main__':
     l_ldiff = []
     avr_list = []
     p1 = Plot()
-    for i in range(1,216):
-        lcmt, lfix = case.gitFixCommits("v4.9.{}..v4.9.{}".format(i,i+1), "/Volumes/linux-stable")
-        cmt_time, fix_time = case.git_time(lcmt, lfix, '/Volumes/linux-stable')
+    for i in range(1,226):
+        lcmt, lfix = case.gitFixCommits("v4.9.{}..v4.9.{}".format(i,i+1), "f:/linux_stable/linux-stable")
+        cmt_time, fix_time = case.git_time(lcmt, lfix, 'f:/linux_stable/linux-stable')
         ldiff = case.get_diff(cmt_time, fix_time)
         mean = p1.get_aver(ldiff)
         avr_list.append(mean)
+    # print(avr_list)
+    p1.correlation(avr_list)
     p1.get_plot(avr_list)
+
