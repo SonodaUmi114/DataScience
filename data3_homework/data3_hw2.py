@@ -1,7 +1,32 @@
 """
-    correlation
-    2020/6/8
+Group1 members information:
+Name, ID, E-mail
+Cao Yanfei    320180939561  caoyf18@lzu.edu.cn
+Cao Yuxuan    320180939571  caoyx2018@lzu.edu.cn
+Ding Junwei   320180939671  dingjw18@lzu.edu.cn
+Gao Shan      320180939740  shgao18@lzu.edu.cn
+Liu Zheng     320180940101  liuzheng2018@lzu.edu.cn
+Qiu Hanqiang  320180940181  479845114@qq.com
+Song Xiujie   320180940211  songxj2018@lzu.edu.cn
+Zhang Zexin   320180940590  zhangzexin18@lzu.edu.cn
 """
+
+"""
+data3: group homework
+Question: does bug-survivial time change with sublevels?
+Hypothesis: 
+We collected the bug survival time in sublevels of v4.9
+For each sublevel, we calculted the average survival time of bugs.
+Then, we draw the line chart; x-axis is sublevels(from v4.4.1 to v4.4.215), y-axis is the average bug-survival time.
+Last we calculated the correlation coefficient to check the relationship.
+"""
+
+__copyright__ = 'T1,Lanzhou University,2020'
+__license__ = 'GPLV2 or later'
+__version__ = 0.2
+__author__ = ['Hanqiang Qiu','Yanfei Cao','Zheng Liu','Xiujie Song','Yuxuan Cao','Shan Gao','Zexin Zhang','Junwei Ding']
+__email__ = ['479845114@qq.com','caoyf18@lzu.edu.cn','liuzheng2018@lzu.edu.cn','songxj2018@lzu.edu.cn','caoyx2018@lzu.edu.cn','shgao18@lzu.edu.cn','zhangzexin18@lzu.edu.cn','dingjw18@lzu.edu.cn']
+__status__ = 'done'
 
 
 import numpy as np
@@ -142,14 +167,13 @@ class Plot:
         print(corre)
 
 
-
 if __name__ == '__main__':
     commit = re.compile('^commit [0-9a-z]{40}$', re.IGNORECASE)
     fixes = re.compile('^\W+Fixes: [a-f0-9]{8,40} \(.*\)$', re.IGNORECASE)
     case = Data()
     l_ldiff = []
     avr_list = []
-    for i in range(1,216):
+    for i in range(1,225):
         lcmt, lfix = case.gitFixCommits("v4.9.{}..v4.9.{}".format(i,i+1), '/Volumes/云淡风轻/linux-stable')
         cmt_time, fix_time = case.git_time(lcmt, lfix, '/Volumes/云淡风轻/linux-stable')
         ldiff = case.get_diff(cmt_time, fix_time)
