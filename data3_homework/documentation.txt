@@ -1,0 +1,9 @@
+After discussion, our group raised a question: does bug survival time change over kernel version's sublevels, how does it change, and what is the trend?
+
+Based on our common sense, our team hypothesized that, on the whole, as sublevel increases, bug survival time will decrease. The main reason is that with the continuous modification of the previous bugs, we simply think that there may be fewer bugs, and with the foundation of bug modification in the previous sublevel, it will be faster to modify bugs in the future sublevel (It's similar to laying foundation and building a house).
+
+Our team extracted the commit and fix numbers and their timestamps from v4.9.1 … v4.9.225. Through calculating, we get the time difference between commits and fixes which stand for the existence time of bugs. Then, calculate the average survival time of bugs in each adjacent sublevel. Finally, plot for average bug survival time changed with sublevels.
+
+For data cleaning and normalization, we use the method of note the errors ignore, that is, the illegal characters in decoding are ignored. In addition, we find that there are six data in the data that are NaN (not a number), that is, there are six breakpoints in the graph. When cleaning up the data, we use the dropna() function of pandas to retrieve the NaN value in the data frame and remove it.
+
+Finally, we analyze the data correlation of the image (X-axis is different kernel version's sublevels, Y-axis is average bug survival time), and calculate the correlation coefficient that is about 0.6633, which means it has a relatively strong positive correlation. Therefore, it negates the hypothesis that our team initially thought there was a significant negative correlation (with the increase of kernel version's sublevels, the average bug survival time decreased).
