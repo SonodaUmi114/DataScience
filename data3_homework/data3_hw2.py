@@ -173,14 +173,14 @@ if __name__ == '__main__':
     case = Data()
     l_ldiff = []
     avr_list = []
-    for i in range(1,225):
-        lcmt, lfix = case.gitFixCommits("v4.9.{}..v4.9.{}".format(i,i+1), '/Volumes/云淡风轻/linux-stable')
-        cmt_time, fix_time = case.git_time(lcmt, lfix, '/Volumes/云淡风轻/linux-stable')
+    for i in range(1,226):
+        lcmt, lfix = case.gitFixCommits("v4.9.{}..v4.9.{}".format(i,i+1), 'f:/linux_stable/linux-stable')
+        cmt_time, fix_time = case.git_time(lcmt, lfix, 'f:/linux_stable/linux-stable')
         ldiff = case.get_diff(cmt_time, fix_time)
         mean = case.get_aver(ldiff)
         avr_list.append(mean)
     vlist_raw = ['v4.9.{}'.format(i) for i in range(1, len(avr_list) + 1)]
     vlist,mlist = case.pd_handling(vlist_raw,avr_list)
     p1 = Plot(vlist,mlist)
-    p1.get_plot()
     p1.correlation()
+    p1.get_plot()
