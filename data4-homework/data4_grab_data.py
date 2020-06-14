@@ -11,13 +11,10 @@ Song Xiujie   320180940211  songxj2018@lzu.edu.cn
 Zhang Zexin   320180940590  zhangzexin18@lzu.edu.cn """
 
 """
-data3: group homework
-Question: does bug-survivial time change with sublevels?
-Hypothesis: 
-We collected the bug survival time in sublevels of v4.9
-For each sublevel, we calculted the average survival time of bugs.
-Then, we draw the line chart; x-axis is sublevels(from v4.4.1 to v4.4.215), y-axis is the average bug-survival time.
-Last we calculated the correlation coefficient to check the relationship."""
+data4: group homework
+Question: get the data of time-to-fix 
+Hypothesis: collect the bug survival time in v4.9/v4.4/v4.14/v4.19
+"""
 
 __copyright__ = 'T1,Lanzhou University,2020'
 __license__ = 'GPLV2 or later'
@@ -27,13 +24,11 @@ __email__ = ['479845114@qq.com','caoyf18@lzu.edu.cn','liuzheng2018@lzu.edu.cn','
 __status__ = 'done'
 
 
-# import numpy as np
-# import pandas as pd
+
 import re
 import unicodedata
 from subprocess import Popen, PIPE
 import csv
-# import matplotlib.pyplot as plt
 
 
 class Data:
@@ -44,8 +39,6 @@ class Data:
     def gitFixCommits(self, kernelRange, repo):
         """
         Getting commits and corresponding commits fixed.
-        :param kernelRange: range of kernal version's sublevels, such as 'v4.9..v4.9.216'
-        :param repo: The repository where the Git command runs
         :return: lists of commits and corresponding commits fixed
         """
         nr_fixes = 0
@@ -90,8 +83,6 @@ class Data:
             if data2 != '':
                 cmt_time.append(int(data1.strip('"')))
                 fix_time.append(int(data2.strip('"')))
-        # print(len(cmt_time))
-
         return cmt_time, fix_time
 
     def get_diff(self, cmt_time, fix_time):
@@ -114,7 +105,7 @@ class Data:
                 writer.writerow([i])
 
 
-rint(corre)
+
 
 
 if __name__ == '__main__':
