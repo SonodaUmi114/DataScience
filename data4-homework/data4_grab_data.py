@@ -12,8 +12,8 @@ Zhang Zexin   320180940590  zhangzexin18@lzu.edu.cn """
 
 """
 data4: group homework
-Question: get the data of time-to-fix 
-Hypothesis: collect the bug survival time in v4.9/v4.4/v4.14/v4.19
+get the data of time-to-fix 
+collect the bug survival time in v4.9/v4.4/v4.14/v4.19
 """
 
 __copyright__ = 'T1,Lanzhou University,2020'
@@ -97,15 +97,11 @@ class Data:
         ldiff = [(cmt_time[i] - fix_time[i]) // sec_per_hour for i in range(len(cmt_time))]
         return ldiff
 
-
     def store_data(self ,ldiff):
         with open('v4_4.csv','w',encoding='utf-8') as f:
             writer = csv.writer(f)
             for i in ldiff:
                 writer.writerow([i])
-
-
-
 
 
 if __name__ == '__main__':
@@ -119,5 +115,3 @@ if __name__ == '__main__':
     cmt_time, fix_time = case.git_time(lcmt, lfix, 'D:\Github\Github_programs\linux-stable')
     ldiff = case.get_diff(cmt_time, fix_time)
     case.store_data(ldiff)
-
-

@@ -10,30 +10,32 @@ Qiu Hanqiang  320180940181  479845114@qq.com
 Song Xiujie   320180940211  songxj2018@lzu.edu.cn
 Zhang Zexin   320180940590  zhangzexin18@lzu.edu.cn '''
 
-'''
+"""
 Data4 Group Homework
-Question: Use basic statistics to evaluate the similarity/difference of the ”time-to-fix” for each of the LTS kernels in
-          a quantitative manner.
+Use basic statistics to evaluate the similarity/difference of the ”time-to-fix” for each of the LTS kernels in
+a quantitative manner.
 main function:  1. clean acquired data
                 2. make the probability distribution graph
                 3. calculate the KL  correlation coefficient
                 4. Calculate the JS  correlation coefficient
                 5. Calculate the pearson correlation coefficient
-                6. Calculate manhattan distance '''
+                6. Calculate manhattan distance """
 
 
 __copyright__ = 'T1,Lanzhou University,2020'
 __license__ = 'GPLV2 or later'
 __version__ = 1.0
 __author__ = ['Hanqiang Qiu','Yanfei Cao','Zheng Liu','Xiujie Song','Yuxuan Cao','Shan Gao','Zexin Zhang','Junwei Ding']
-__email__ = ['479845114@qq.com','caoyf18@lzu.edu.cn','liuzheng2018@lzu.edu.cn','songxj@lzu.edu.cn','caoyx2018@lzu.edu.cn','shgao18@lzu.edu.cn','zhangzexin18@lzu.edu.cn','dingjw18@lzu.edu.cn']
+__email__ = ['479845114@qq.com','caoyf18@lzu.edu.cn','liuzheng2018@lzu.edu.cn','songxj2018@lzu.edu.cn','caoyx2018@lzu.edu.cn','shgao18@lzu.edu.cn','zhangzexin18@lzu.edu.cn','dingjw18@lzu.edu.cn']
 __status__ = 'done'
+
 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats
 import random
+
 
 def clean(filename):  #clean the data
     dataframe = pd.read_csv(str(filename), skip_blank_lines = True)
@@ -62,9 +64,9 @@ def makeimg(filename): #draw the Probability Distribution
     plt.show()
 
 
-
 def KL(arr1, arr2): #Calculate the KL  correlation coefficient
     return scipy.stats.entropy(arr1, arr2)
+
 
 def JS(p,q):      #Calculate the JS  correlation coefficient
     M=(p+q)/2
@@ -105,8 +107,6 @@ def pearson(p,q):  #Calculate the pearson correlation coefficient
     return r
 
 
-
-
 def caclu(funcname):  # Permutation Sequence;
     arr1 = clean('v4_4.csv')
     arr2 = clean('v4_9.csv')
@@ -119,8 +119,6 @@ def caclu(funcname):  # Permutation Sequence;
     print(funcname(arr2, arr3))
     print(funcname(arr2, arr4))
     print(funcname(arr3, arr4))
-
-
 
 
 makeimg('v4_4.csv')
