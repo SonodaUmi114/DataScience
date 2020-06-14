@@ -10,6 +10,18 @@ Qiu Hanqiang  320180940181  479845114@qq.com
 Song Xiujie   320180940211  songxj2018@lzu.edu.cn
 Zhang Zexin   320180940590  zhangzexin18@lzu.edu.cn '''
 
+'''
+Data4 Group Homework
+Question: Use basic statistics to evaluate the similarity/difference of the ”time-to-fix” for each of the LTS kernels in
+          a quantitative manner.
+main function:  1. clean acquired data
+                2. make the probability distribution graph
+                3. calculate the KL  correlation coefficient
+                4. Calculate the JS  correlation coefficient
+                5. Calculate the pearson correlation coefficient
+                6. Calculate manhattan distance '''
+
+
 __copyright__ = 'T1,Lanzhou University,2020'
 __license__ = 'GPLV2 or later'
 __version__ = 1.0
@@ -51,15 +63,15 @@ def makeimg(filename): #draw the Probability Distribution
 
 
 
-def KL(arr1, arr2): #Caclulate the KL  correlation coefficient
+def KL(arr1, arr2): #Calculate the KL  correlation coefficient
     return scipy.stats.entropy(arr1, arr2)
 
-def JS(p,q):      #Caclulate the JS  correlation coefficient
+def JS(p,q):      #Calculate the JS  correlation coefficient
     M=(p+q)/2
     return 0.5*scipy.stats.entropy(p, M)+0.5*scipy.stats.entropy(q, M)
 
 
-def manhattan(p,q):   #caclulate manhattan distance
+def manhattan(p,q):   #Calculate manhattan distance
 
     same = 0
     for i in p:
@@ -71,7 +83,7 @@ def manhattan(p,q):   #caclulate manhattan distance
     return distance
 
 
-def pearson(p,q):  #Caclulate the pearson correlation coefficient
+def pearson(p,q):  #Calculate the pearson correlation coefficient
 #Get the same value in two array
     same = 0
     for i in p:
