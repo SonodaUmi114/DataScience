@@ -8,8 +8,7 @@ Gao Shan      320180939740  shgao18@lzu.edu.cn
 Liu Zheng     320180940101  liuzheng2018@lzu.edu.cn
 Qiu Hanqiang  320180940181  479845114@qq.com
 Song Xiujie   320180940211  songxj2018@lzu.edu.cn
-Zhang Zexin   320180940590  zhangzexin18@lzu.edu.cn
-'''
+Zhang Zexin   320180940590  zhangzexin18@lzu.edu.cn '''
 
 __copyright__ = 'T1,Lanzhou University,2020'
 __license__ = 'GPLV2 or later'
@@ -24,7 +23,7 @@ import matplotlib.pyplot as plt
 import scipy.stats
 import random
 
-def clean(filename):
+def clean(filename):  #clean the data
     dataframe = pd.read_csv(str(filename), skip_blank_lines = True)
     #print(dataframe.time)
     array1 = []
@@ -38,7 +37,7 @@ def clean(filename):
     return array3
 
 
-def makeimg(filename):
+def makeimg(filename): #draw the Probability Distribution
     dataframe = pd.read_csv(str(filename), skip_blank_lines = True)
     #print(dataframe.time)
     array1 = []
@@ -52,17 +51,16 @@ def makeimg(filename):
 
 
 
-def KL(arr1, arr2):
+def KL(arr1, arr2): #Caclulate the KL  correlation coefficient
     return scipy.stats.entropy(arr1, arr2)
 
-def JS(p,q):
+def JS(p,q):      #Caclulate the JS  correlation coefficient
     M=(p+q)/2
     return 0.5*scipy.stats.entropy(p, M)+0.5*scipy.stats.entropy(q, M)
 
 
-#计算曼哈顿距离：
-def manhattan(p,q):
-#只计算两者共同有的
+def manhattan(p,q):   #caclulate manhattan distance
+
     same = 0
     for i in p:
         if i in q:
@@ -72,9 +70,9 @@ def manhattan(p,q):
     distance = sum(abs(p[i] - q[i]) for i in vals)
     return distance
 
-#计算皮尔逊相关度：
-def pearson(p,q):
-#只计算两者共同有的
+
+def pearson(p,q):  #Caclulate the pearson correlation coefficient
+#Get the same value in two array
     same = 0
     for i in p:
         if i in q:
@@ -87,10 +85,9 @@ def pearson(p,q):
     sumysq = sum([q[i]**2 for i in range(n)])
     sumxy = sum([p[i]*q[i] for i in range(n)])
     # print sumxy
-    #求出pearson相关系数
     up = sumxy - sumx*sumy/n
     down = ((sumxsq - pow(sumxsq,2)/n)*(sumysq - pow(sumysq,2)/n))**.5
-    #若down为零则不能计算，return 0
+    #if down == 0, It can not be caclulated,return 0.
     if down == 0 :return 0
     r = up/down
     return r
@@ -98,7 +95,7 @@ def pearson(p,q):
 
 
 
-def caclu(funcname):
+def caclu(funcname):  # Permutation Sequence;
     arr1 = clean('v4_4.csv')
     arr2 = clean('v4_9.csv')
     arr3 = clean('v4_14.csv')
