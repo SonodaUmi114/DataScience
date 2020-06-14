@@ -1,0 +1,42 @@
+Homework of data4
+
+
+
+According our understanding, the purpose of data4 homework is tiring to find a quantitative manner of 'Time to fix' and use it to evaluate the quality of kernels. The first step of our work is getting and cleaning data. We use 'data4_grab_data.py'(attached in the folder) to get the 'Time to fix ' in kernel v4.4 , v4.9 , v4.14 and v4.19. 'data4_grab_data.py' also could clean data initially like removing data that was obviously damaged. So we got the data as .csv file(attached in the folder).
+
+Then secondly we write 'analysis.py'(attached). It could clean data and analysis it. We use it to draw a probability distribution picture of four different kernels. We could see that the shape of four pictures are pretty similar, which gives us a general direction to research ---- Are they really as similar as we assume? So we import for quantitative manners to evaluate it: Pearson Coefficient, Manhattan Distance, KL Divergence and JS Divergence. We selected 2000 lines of data randomly from every kernel as a sample. Content blow is the result we got. There are 6 lines data of every manner because we used the full array of these four kernel data. The Pearson correlation coefficient is a measure of the degree of linear correlation. The geometric interpretation of Pearson correlation is that it represents the cosine of the angle between the vectors formed by the values of the two variables based on the mean concentration. KL and JS divergence can reflect the similarity between the two sets of data. The closer these two values are to 0, the more similar the two sets of data, and the closer to 1, the more different the two sets of data. Manhattan distance is a geometric measure, which can reflect the sum of geometric distances of corresponding data points. The result shows that the Pearson correlation between kernels are pretty close to 0. This shows that there is no obvious linear relationship between our data, and we can get that there is no obvious relationship between the kernel version and 'Time to fix'. So we got it. Next we turn to KL and Js coefficient. They are another form of calculation of the KS coefficient, both of which explain the difference in the numerical distribution of the two sets of data. They are all greater than 0 and less than 1. From the results, we can see that their values are very close to 0, which shows that the distribution of these data itself is very similar, which corroborates the conjecture we obtained through the probability distribution map. The Manhattan distance reflects the sum of the distances between data points. Obviously, in mathematics, it has a positive correlation with the size of the sample size. Therefore, we divided the resulting Manhattan distance by the number of samples to get such a result: 26, 28, 11, 7, 9, 12. The average of them is 15.5  Considering that the values of these time to fix usually exceed 1000, and the average Manhattan distance between each group of corresponding points is only 15.5, we can say that for any two sample arrays, their distribution is very close.
+
+Through the above analysis, we have concluded that: For different kernels, their 'time to fix' distribution is very similar, and there is no visible correlation between the distribution of repair time and the kernel version.
+
+
+
+
+The results of analysis.py:
+<function pearson at 0x13aacb0d0>
+4.843996223107155e-07
+9.329281099167608e-07
+1.1417980423750756e-06
+1.0237376574696859e-06
+1.0806135851227367e-06
+1.0528091067513361e-06
+<function KL at 0x13a97c7b8>
+0.000745290946920401
+0.002738464631914239
+0.0009256682679339536
+0.0013576861917357942
+0.001041063023925079
+inf
+<function JS at 0x13a97c9d8>
+0.0006049758912035607
+0.00044958272906491436
+0.0008672337335296058
+0.0006814861303231199
+0.0011156725779243222
+0.0002327941253095863
+<function manhattan at 0x13aac9048>
+52842
+56092
+21484
+14976
+17155
+24122
