@@ -1,0 +1,158 @@
+Documentation:
+
+1) Hypothesis:
+If a developer has more "reviewed by" "reported by" "signed off by" "tested by" tags and higer fix rate(fix/ commit), 
+then he/she will write less bugs, that is, has smaller bug rate(bug/ commit).
+
+2) Goal:
+Build a decision tree to predict bug rate of developers according to their tags and fix rate.
+
+3) Data harvesting:
+We use python's package 'subprocess' to call git to get git log by using command-line instruction. 
+
+First of all, we use 'git log -P' to get the whole git log and then use 're' to match all developers' name, and write developers' name into "author.csv" file. After that, we use 'git log --author = 'XXX' --oneline --shortstat' to get the data of all commits and the total number of commits of different developers.  If the number of his or hers commits is lower than 10, we will abandon this developer. 
+After this step of initial cleaning, we use 're' to match some meaningful tags, such as 'Signed-off-by', 'Tested-by', 'Reviewed-by' and 'Reported-by' for those developers whose commit number is over 10.  Thus, we get the data of number of sign-off tags, test tags, review tags and report tags of different developers.  Then, we traverse all commits of those developers to get the data of their bugs and fixes by the tag 'Fixes'. In the end, we get about 3000 developers' data and write them into a '.csv' file.
+
+4) Data cleaning(analysis):
+After getting the data, our group has carried out the following preprocessing operations on the data to achieve the purpose of data cleaning:
+a. Delete developers with less than 50 commits.
+b. Delete meaningless data(NAN, meaningless developers...)
+c. Calculate fix rate (fix / commit) and bug rate (bug / commit) of each developer. In order to unify the indicators and make deveopers comparable, we divide fix and bug by the total number of commits to convert fix and bug into probability form. 
+   
+5) Technology analysis and implementation:
+
+5.1) Technology analysis:
+
+At first, our group discussed four models, namely linear regression model, naive Bayes, KNN and classification decision tree. 
+
+For linear model, there are many factors to be considered in our project, the linear model can not be fully considered, the accuracy is low. Besides, fewer relationships in nature are linear and we do not think our prediction model will be linear also.
+
+For naive Bayes, it requires that the variables are independent, but we think that the five variables we choose may have correlation, affect each other, or are not completely independent;
+
+For KNN, the disadvantage of this method is that it needs a large amount of calculation and it can not reflect the classification process.
+
+Finally, we decided to choose classification decision tree.
+
+For the classification decision tree, reasons we choose it are as follows:
+1. It needs less data preparation. It does not need data nomalization and does not sensitive to different scales. Because the scales of our data are quite different, using decision tree can save a lot of time. 
+2. The classification decision tree can fully reflect the prediction process and is easy to understand, so that we can learn what features leads to the results by visualzing the tree.  
+3. It can show the importance of different features, so that we can know their influence on making decisions.
+
+One disadvantage of decision tree is that it is easy to over fit:
+To avoid over-fitting, our team carried out grid search and cross validation to optimize the parameters. Through the evaluation of different super parameters (max depth, min samples leaf, min samples split) combination, the best super parameter combination is obtained(6,2,2).
+
+5.2) implementation
+After cleaning the data, we finally got about 1500 pieces of data. 
+
+Our group selected general classification decision tree for analysis and modeling, and divided the data according to 3:1.  Three quarters of the data were used for building classification decision tree, and one quarter of the data was used for test.  Five parameters in the hypothesis are used to predict the bug rate of developers. Our team has set "class A" for developers whose bug rate is less than 0.02 and "class B" for developers whose bug rate is greater than 0.02.
+
+Classification decision tree can be a good model, but we have to solve the sample imbalance problem. At the begining, class A has 1041 developers and class B has  381 developers. In order to solve this problem, our group uses SMOTE oversampling algorithm (approximate filling of unbalanced data) to expand smaller sample( Class B). It will synthesize new samples for classes with fewer data.  The strategy of synthesis is that it selects a sample 1 randomly from its nearest neighbor for each minority class sample, and then select a point randomly on the line between these two samples as the newly synthesized minority class sample. We applys SMOTE to training set and the set has been expanded to 1596 finally.
+
+6) Model Assessment:
+
+Our group used the following indicators to analyze and evaluate the model:
+(TP: True Positive, TN: True Negative, FP: Fasle Positive, FN: False Negative)
+
+Accuracy: (TP + TN) / (TP + TN + FN + FP)
+Precision: TP / (TP + FP)
+Recall: TP / (TP + FN)
+ROC curve (Receiver Operating Characteristic)
+AUC (Area Under Curve): when AUC = 1, it means it is a perfect classifier; when AUC = [0.85, 0.95], it means it is a very good classifier; when AUC = [0.7, 0.85], it means the classifier is normal. This metric can reflect the fitting effect of the model
+
+Finally, the following results are obtained, indicating that the performance and effect of the model are very good, and the AUC of the training set is not significantly larger than that of the test set, which means there is no over fitting：
+
+Output:
+Accuracy of original model:  0.8202247191011236
+best parameters：
+ {'max_depth': 6, 'min_samples_leaf': 2, 'min_samples_split': 2}
+best score：
+ 0.8631306865177834
+best estimator：
+ DecisionTreeClassifier(max_depth=6, min_samples_leaf=2)
+Accuracy of improved model:  0.8286516853932584
+feature importance:  
+ signed_off_by   tested_by   reviewed_by  reported_by   fix rate
+[0.05496419,  0.03021175,  0.04094865, 0.03433827 0.83953714]
+
+AUC:
+test set:0.85
+training set:0.90
+
+              precision    recall  f1-score   support
+
+           A       0.96      0.80      0.87       263
+           B       0.62      0.90      0.73        93
+
+    accuracy                           0.83       356
+   macro avg       0.79      0.85      0.80       356
+weighted avg       0.87      0.83      0.84       356
+
+7) Result Interpretation
+
+According to the decision tree we generated, the decision rule of the tree is as follows:
+
+If fix rate is less than 0.022 --> Class A.
+
+If fix rate is in the range (0.022, 0.04), number of reported_by is less than 1.5, number of signed_off_by is less than184.5 --> Class A.
+
+If fix rate is in the range (0.022, 0.04), number of reported_by is less than 1.5, number of signed_off_by is bigger than 184.5 and  reviewed_by less than 6 --> ClassB
+
+If fix rate is in the range (0.022, 0.04), number of reported_by tags is less than 1.5, signed_off_by is bigger than 184.5, reviewed_by is  bigger than 6 --> Class A
+
+If fix rate is in the range (0.022, 0.04), number of reported_by is in the range (1.5, 5.5) --> Class A
+
+If fix rate is in the range (0.022, 0.04), number of reported_by is bigger than 5.5 --> Class A
+
+If fix rate is in the range (0.04,0.07), number of signed_off_by is less than 1006, tested_by is less than 13.5, reviewed_by is less than 1.5, fix rate less than 0.043 -->Calss B
+
+If fix rate is in the range (0.04,0.07), number of signed_off is less than 1006, tested_by is less than 13.5, reviewed_by is less than 1.5, fix rate is bigger than 0.043 -->Calss A
+
+If fix rate is in the range (0.04, 0.07), number of signed_off_by is less than 1006, tested_by is less than 13.5, reviewed_by is bigger than 1.5, reviewed_by is less than 216 -->Class B
+
+If fix rate is in the range (0.04, 0.07), number of signed_off_by is less than 1006, tested_by is less than 13.5, reviewed_by is bigger than 216 -->calss A
+
+If fix rate is in the range (0.04, 0.07), number of signed_off_by is  less than 1006, tested_by is bigger than 13.5, reviewed_by is less than 180.5 --> class A
+
+If fix rate is in the range(0.04, 0.07), number of signed_off_by is less than 1006, tested_by is bigger than 13.5, reviewed_by is bigger than 180.5, fix rate is less than 0.055-->class A
+
+If fix rate is in the range(0.04, 0.07), number of signed_off_by is less than 1006, tested_by is bigger than 13.5, reviewed_by is bigger than 180.5, fix rate is bigger than 0.055-->class B
+
+If fix rate is in the range(0.04, 0.07), number of signed_off_by is bigger than 1006, reported_by is less than 41, reviewed_by is less than 47, signed_off_by is less than 3426 --> class B
+
+If fix rate is in the range(0.04, 0.07), number of signed_off_by is bigger than 1006, reported_by is less than 41, reviewed_by is less than 47, signed_off_by is bigger than 3426 --> class A
+
+If fix rate is in the range(0.04, 0.07), number of signed_off_by is bigger than 1006, reported_by is less than 41, reviewed_by is bigger than 47 --> class B
+
+If fix rate is in the range (0.04, 0.07), number of signed_off_by is bigger than 1006, reported_by is bigger than 41, tested_by is less than 20, reported_by is less than 96.5 --> class B
+
+If fix rate is in the range (0.04, 0.07), number of signed_off_by is bigger than 1006, reported_by is bigger than 41, tested_by is less than 20, reported_by is bigger than 96.5 --> class A
+
+If fix rate is in the range(0.04, 0.07), number of signed_off_by is bigger than 1006, reported_by is bigger than 41, tested_by is bigger than 20 --> class A
+
+If fix rate is bigger than 0.07, number of signed_off_by is less than 81.5, tested_by is less than 7.5, fix rate is less than 0.394 --> class B
+
+If fix rate is bigger than 0.07, number of signed_off_by is less than 81.5, tested_by is less than 7.5, fix rate is bigger than 0.394 --> class A
+
+If fix rate is bigger than 0.07, number of signed_off_by is less than 81.5, tested_by is bigger than 7.5, fix rate is less than 0.154 --> class A
+
+If fix rate is bigger than 0.07, number of signed_off_by is less than 81.5, tested_by is bigger than 7.5, fix rate is bigger than 0.154 --> class B
+
+If fix rate is bigger than 0.07, number of signed_off_by is in the range (81.5, 85.5), fix rate is less than 0.109 --> class A
+
+If fix rate is bigger than 0.07, number of signed_off_by is in the range (81.5, 85.5), fix rate is bigger than 0.109, signed_off_by is less than 83.5 --> class A
+
+If fix rate is bigger than 0.07, number of signed_off_by is in the range (81.5, 85.5), fix rate is bigger than 0.109, signed_off_by is bigger than 83.5 --> class B
+
+If fix rate is bigger than 0.07, number of signed_off_by is bigger than 85.5, reported_by is less than 172.0, reviewed_by is less than 1.5, fix rate is less than 0.094 --> class A
+
+If fix rate is bigger than 0.07, number of signed_off_by is bigger than 85.5, reported_by is less than 172.0, reviewed_by is less than 1.5, fix rate is bigger than 0.094 --> class B
+
+If fix rate is bigger than 0.07, number of signed_off_by is bigger than 85.5, reported_by is less than 172.0, reviewed_by is bigger than 1.5 --> class B
+
+If fix rate is bigger than 0.07, number of signed_off_by is bigger than 85.5, reported_by is bigger than 172.0 --> class A
+
+Conclusion:
+
+Based on data we collected, we have successfully built a reliable decision tree, whose accuracy is 0.83 and AUC of test set is 0.85. Among 5 features we selected (number of reviewed_by, tested_by, signed_off_by, reported_by tags and fix rate), the importance rank of them is 0.83953714(fix rate), 0.05496419(signed_off_by), 0.04094865(reviewed_by), 0.03433827(reported_by) and 0.03021175(tested_by). By feature importance, we can see that the four tags we selected has very small feature importance, which means they has very little influence on the decision process.
+
+According to the decision rule mentioned above, we cannot accept the original hypothesis that if a developer has more tags and fixed more bugs then he or she will has smaller bug rate. From the first two rules we can see that although the fix rate, number reported by tags and signed off by tags is small, it is still in class A(smaller bug rate class). Besides, the feature importance (or gini importandce) of four tags is too small, so the hypothesis is rejected.
