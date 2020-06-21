@@ -141,9 +141,7 @@ class Classifier:
 
         # best_params_
         print('best parameters：\n', gs_estimator.best_params_)
-        # 最佳结果：best_score_
         print('best score：\n', gs_estimator.best_score_)
-        # 最佳估计器：best_estimator_
         print('best estimator：\n', gs_estimator.best_estimator_)
         return gs_estimator
 
