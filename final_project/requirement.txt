@@ -1,0 +1,43 @@
+Requirements:
+
+Top requirement: According to the "reviewed by", "reported by", "signed off by", "tested by" and "fix rate (fix / commit)" of each developer, use classification decision tree to predict the bug rate (bug / commit) of developers
+
+Req1: Each developer's data shall be accurately captured and saved in a file.
+	Req1.1 The names of developers should be obtained and wrote into a csv file.
+	Req1.2 The tags of developers shall be obtained
+		Req1.2.1Each developer's "reviewed by" "reported by" "signed off by" "tested by" and "fix rate (fix / commit)" shall be obtained.
+		Req1.2.2 Data should be saved to another CSV file.
+
+Req2: Data shall be preprocessed
+	Req2.1Data shall be cleaned
+		Req2.1.1The developers with less than 50 commits should be abandoned.
+		Req2.1.2 Meaningless data shall be deleted.
+			Req2.1.2.1 The NaN shall be deleted.
+			Req2.1.2.2 Data with wrong developer name shall be deleted.
+
+	Req2.2 The fix rate(fix / commit) and bug rate(bug / commit) should be calculated.
+
+	Req2.2 Developers should be devided into 2 classes.
+
+Req3: Classification decision tree shall be established accurately.
+	Req3.1 Data shall be divided into training sets and test sets.
+	Req3.2 Sample imbalance shall be dealt with.
+		Req3.2.1 Smote oversampling algorithm may be used.
+	Req3.3 The problem of model over fitting shall be dealt with
+		Req3.3.1 Different combinations of super parameters shall be evaluated.
+		Req3.3.2 The best combination of super parameters shall be obtained.
+			Req3.3.2.1 Grid search may be used.
+
+Req4: The model shall be evaluated correctly.
+	Req4.1 ROC curve should be established correctly.
+		Req4.1.1 False positive rate shall be taken as X-axis.
+		Req4.1.2 The true positive rate shall be the Y-axis.
+	Req4.2 AUC area should be calculated correctly
+	Req4.3 Metrics such as precision, recall, accurcy... should be used.
+
+Req5: The results shall be interpreted reasonably.
+	Req5.1 Decision tree shall be well interprated.
+	Req5.2 Hypothesis shall be accepted or rejected.
+
+
+
