@@ -1,3 +1,42 @@
+"""
+Group1 members information:
+Name, ID, E-mail
+Cao Yanfei    320180939561  caoyf18@lzu.edu.cn
+Cao Yuxuan    320180939571  caoyx2018@lzu.edu.cn
+Ding Junwei   320180939671  dingjw18@lzu.edu.cn
+Gao Shan      320180939740  shgao18@lzu.edu.cn
+Liu Zheng     320180940101  liuzheng2018@lzu.edu.cn
+Qiu Hanqiang  320180940181  479845114@qq.com
+Song Xiujie   320180940211  songxj2018@lzu.edu.cn
+Zhang Zexin   320180940590  zhangzexin18@lzu.edu.cn
+"""
+
+"""
+Using classification decision tree to build a prediction model: 
+using developers' number of Signed-off-by tags, Reviewed-by tags, Tested-by tags, Reported-by tags and fix rate(number of fix/ number of commits) to predict bug rates(number of bugs/ number of commits).
+dividing bug rates into 2 classes: A(less than 0.02) and B(larger than 0.02)
+
+Hypothesis:
+If the developer has fixed more bugs, reported, signed off, reviewed and tested more codes before, 
+he or she will has smaller bug rate.
+
+Process:
+Pre-process the data.
+Built model.
+Report the accuracy, precision, recall, RUC curve, AUC... to evaluate the model.
+Use grid search to find best parameters and avoid over-fitting to improve model.
+Draw the decision tree and report the importance of 5 features mentioned above.
+"""
+
+__copyright__ = 'T1,Lanzhou University,2020'
+__license__ = 'GPLV2 or later'
+__version__ = 0.1
+__author__ = ['Hanqiang Qiu', 'Yanfei Cao', 'Zheng Liu', 'Xiujie Song', 'Yuxuan Cao', 'Shan Gao', 'Zexin Zhang',
+              'Junwei Ding']
+__email__ = ['479845114@qq.com', 'caoyf18@lzu.edu.cn', 'liuzheng2018@lzu.edu.cn', 'songxj2018@lzu.edu.cn',
+             'caoyx2018@lzu.edu.cn', 'shgao18@lzu.edu.cn', 'zhangzexin18@lzu.edu.cn', 'dingjw18@lzu.edu.cn']
+__status__ = 'done'
+
 import re
 import csv
 import subprocess
@@ -6,9 +45,9 @@ from subprocess import Popen, PIPE
 
 class Developer:
     def __init__(self):
-        self.fix = re.compile('^\W+Fixes: [a-f0-9]{8,40} \(.*\)$', re.IGNORECASE)  # fix_tag
-        self.commit = re.compile('^[0-9a-z]{5,}')  # bug_id
-        self.repo = 'D:\git_warehouse\linux-stable'  # the address of linux-stable warehouse
+        self.fix = re.compile('^\W+Fixes: [a-f0-9]{8,40} \(.*\)$', re.IGNORECASE)  # matching rule for fix_tag
+        self.commit = re.compile('^[0-9a-z]{5,}')  # matching rule for bug_id
+        self.repo = 'D:\git_warehouse\linux-stable'  # the storage path of linux-stable
 
         cmd = ["git", "log", "-P"]
         p = Popen(cmd, cwd=self.repo, stdout=PIPE)
@@ -23,18 +62,22 @@ class Developer:
         self.get_author()
 
     def get_author(self):
-
+        """
+        loop through the developer in author.csv
+        :return: the commits and tags data for each developer in developer.csv
+        """
         with open('author.csv') as f:
             csv_reader = csv.reader(f)
             for i, row in enumerate(csv_reader):
                 author = row[0]
                 try:
                     result = self.git(author)
+                    # if the number of commits <= 10
                     if result == 0:
-                        print(i)
+                        # print(i)
                         continue
                     else:
-                        print(i)
+                        # print(i)
                         with open('developer.csv', 'a+', encoding='utf-8', newline='') as f:
                             csv_writer = csv.writer(f)
                             csv_writer.writerow(result)
@@ -42,10 +85,15 @@ class Developer:
                     continue
 
     def git(self, name):
-        sign_off = re.compile('^\W+Signed-off-by: {} .+>$'.format(name))  # signed-off by tag
-        test = re.compile('^\W+Tested-by: {} .+>$'.format(name))  # tested-by tag
-        review = re.compile('^\W+Reviewed-by: {} .+>$'.format(name))  # reviewed-by tag
-        report = re.compile('^\W+Reported-by: {} .+>$'.format(name))  # reported-by tag
+        """
+        obtaining the commits and tags data for developer
+        :param name: the name of developer
+        :return: the commits and tags data for developer
+        """
+        sign_off = re.compile('^\W+Signed-off-by: {} .+>$'.format(name))  # matching rule for signed-off by tag
+        test = re.compile('^\W+Tested-by: {} .+>$'.format(name))  # matching rule for tested-by tag
+        review = re.compile('^\W+Reviewed-by: {} .+>$'.format(name))  # matching rule for reviewed-by tag
+        report = re.compile('^\W+Reported-by: {} .+>$'.format(name))  # matching rule for reported-by tag
 
         cmd = 'git log --author="{}" --oneline --shortstat'.format(name)
         p = subprocess.Popen(cmd, cwd=self.repo, stdout=subprocess.PIPE, shell=True)
@@ -54,16 +102,16 @@ class Developer:
         commit_id = []
         for i in out:
             commit_id.append(self.commit.findall(i))
-        commit_id = [i for i in commit_id if i != []]
-        commits = len(commit_id)
+        commit_id = [i for i in commit_id if i != []]  # all commits in a list
+        commits = len(commit_id)  # the number of commits
 
         if commits >= 10:
             sign_off_number = 0  # the number of sign-off
             test_number = 0  # the number of test
             review_number = 0  # the number of review
             report_number = 0  # the number of report
-            fixes = 0
-            bugs = 0
+            fixes = 0  # the number of fixes
+            bugs = 0  # the number of bugs
 
             for line in self.data:
                 if sign_off.match(line):
@@ -85,11 +133,12 @@ class Developer:
                         bug = line.split()[1]
                         if [bug] in commit_id:
                             bugs += 1
-
+            # all the commit data
             result = [name, commits, fixes, bugs, sign_off_number, test_number, review_number, report_number]
             return result
         else:
             return 0
 
 
-developer = Developer()
+if __name__ == "__main__":
+    developer = Developer()
