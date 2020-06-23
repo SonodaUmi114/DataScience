@@ -12,20 +12,12 @@ Zhang Zexin   320180940590  zhangzexin18@lzu.edu.cn
 """
 
 """
-Using classification decision tree to build a prediction model: 
-using developers' number of Signed-off-by tags, Reviewed-by tags, Tested-by tags, Reported-by tags and fix rate(number of fix/ number of commits) to predict bug rates(number of bugs/ number of commits).
-dividing bug rates into 2 classes: A(less than 0.02) and B(larger than 0.02)
-
-Hypothesis:
-If the developer has fixed more bugs, reported, signed off, reviewed and tested more codes before, 
-he or she will has smaller bug rate.
+Using subprocess and re to get name of all developers
 
 Process:
-Pre-process the data.
-Built model.
-Report the accuracy, precision, recall, RUC curve, AUC... to evaluate the model.
-Use grid search to find best parameters and avoid over-fitting to improve model.
-Draw the decision tree and report the importance of 5 features mentioned above.
+Get git log.
+Match name of all developers.
+Save them into a .csv file.
 """
 
 __copyright__ = 'T1,Lanzhou University,2020'
