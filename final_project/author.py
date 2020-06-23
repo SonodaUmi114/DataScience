@@ -17,7 +17,7 @@ Using subprocess and re to get name of all developers
 Process:
 Get git log.
 Match name of all developers.
-Save them into a .csv file.
+Save them into author.csv.
 """
 
 __copyright__ = 'T1,Lanzhou University,2020'
