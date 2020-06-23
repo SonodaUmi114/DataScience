@@ -24,19 +24,19 @@ a) Using grid search to select the best value of parameters.
 b) Pruning the decision tree to avoid overfitting. Carried out grid search and cross validation to optimize the parameters.
 c) Using the best estimator to train a new model.
 
-5. Reporting model's metrics as methods 
+7. Reporting model's metrics as methods 
 a) Calculating the accuracy of the model.
 b) Reoprting the classification report of model.
 c) Reporting the feature importance in the model.
 d) Construct ROC curve and evaluate the performance of the model by calculating the area of AUC.
 
-6. Plotting the ROC as a method 
+8. Plotting the ROC as a method 
 a) Showing the plot.
 
-7. Saving result as a method
+9. Saving result as a method
 a) Visualzing the decision tree and save the .pdf file
 
-8. Result interpretation:
+10. Result interpretation:
 a). Interpret the decision tree generated.
 b). Reject or accept the hypothesis.
 
